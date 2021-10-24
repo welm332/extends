@@ -1,0 +1,6 @@
+{
+    "point":[
+        {"type":"script", "path":"./dir.js"},
+        {"type":"style", "path":"./dir.css"}
+    ]
+}
