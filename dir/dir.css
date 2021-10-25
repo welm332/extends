@@ -1,0 +1,12 @@
+.dir,.file{
+    background-color:  white;
+    color:black;
+    
+}
+#dir_side{
+    z-index: 1;
+}
+
+.editor{
+    z-index: 2;
+}
