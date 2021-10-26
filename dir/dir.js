@@ -6,6 +6,7 @@ window.api.create_local_shk("Ctrl+C");
 window.api.on("Ctrl+C", copy_and_peast_listen);
 focusFlag = true;
 window.addEventListener("click" ,()=>{focusFlag = false});
+palette_commands["OpenDir"] = `create_element(".", "dir", create_side())`
 function copy_and_peast_listen(){
     if(select_element !== null){
         if(! focusFlag){
@@ -46,7 +47,7 @@ async function create_element(path, type, div, nest=0, intertPoint=null){
     if(type === "dir"){
         const file_inputer = document.createElement("input");
         file_inputer.type = "image";
-        file_inputer.src = window.requires.dirname+"/..//extends/dir/file_icon.png";
+        file_inputer.src = window.requires.dirname+"/../extends/dir/file_icon.png";
         // const width = (element.style.height * input.style.width) / input.style.height;
         file_inputer.style.height = "20px";//element.style.height;
         file_inputer.style.width = "20px";//width;
@@ -71,7 +72,7 @@ async function create_element(path, type, div, nest=0, intertPoint=null){
         
         const dir_inputer = document.createElement("input");
         dir_inputer.type = "image";
-        dir_inputer.src = window.requires.dirname+"/..//extends/dir/dir_icon.png";
+        dir_inputer.src = window.requires.dirname+"/../extends/dir/folder_icon.png";
         // const width = (element.style.height * input.style.width) / input.style.height;
         dir_inputer.style.height = "20px";//element.style.height;
         dir_inputer.style.width = "20px";//width;
@@ -150,8 +151,6 @@ async function open_dir(){
     if(open_dirs.length != 0){
         const dir = open_dirs[0];
         const div = create_side();
-        div.style.height = "75vh";
-        div.style.overflow = "auto auto";
         create_element(dir, "dir", div);
         return dir;
     }
@@ -176,6 +175,8 @@ function create_side(){
     }else{
         document.querySelector("#input_area").style.padding = "34px 0px 20px 0px";
     }
+    div.style.height = "75vh";
+    div.style.overflow = "auto auto";
     return div;
     }
 // async function isDir(path){

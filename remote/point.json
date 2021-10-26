@@ -1,0 +1,6 @@
+{
+    "point":[
+        {"type":"script", "attr":{"src":"https://raw.githubusercontent.com/welm332/a3c3_extends/main/dir/dir.js","type":"text/javascript", "charset":"utf-8"}},
+        {"type":"link", "attr":{"href":"https://raw.githubusercontent.com/welm332/a3c3_extends/main/dir/dir.css","rel":"stylesheet"}}
+    ]
+}
