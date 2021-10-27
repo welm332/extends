@@ -3,7 +3,7 @@ async function getloads(auto_reader=false){
     const extends_path = dirname+"/../extends";
     const fs = window.requires.fs;
     let extenders = fs.readdirSync(extends_path);
-    const deletes = [".git"];
+    const deletes = [".git", ".gitignore", "remote"];
     const path = window.requires.path;
     // extename_dict = {"js":"script","css":"link"}
     extenders = extenders.filter((em)=>{return deletes.indexOf(em) === -1});

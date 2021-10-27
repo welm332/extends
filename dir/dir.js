@@ -5,41 +5,54 @@ window.api.on("Ctrl+B", create_side);
 window.api.create_local_shk("Ctrl+C");
 window.api.on("Ctrl+C", copy_and_peast_listen);
 focusFlag = true;
-window.addEventListener("click" ,()=>{focusFlag = false});
-palette_commands["OpenDir"] = `create_element(".", "dir", create_side())`
-function copy_and_peast_listen(){
-    if(select_element !== null){
-        if(! focusFlag){
-            return false;
-        }
-        window.api.create_local_shk("Ctrl+V");
-        window.api.on("Ctrl+V", ()=>{
-            let i = 1;
-            const dirs = fs.readdirSync(window.requires.path.dirname(select_element.dataset.fullpath));
-            const file_basename = select_element.textContent;
-            while(true){
-                dot_rindex = file_basename.lastIndexOf(".");
-                if(dot_rindex === -1){
-                    dot_rindex = file_basename.length 
-                }
-                console.log(file_basename);
-                cp_name = file_basename.substring(0, dot_rindex)+" copy"+(i !== 1 ? ` ${i}`:"")+window.requires.path.extname(file_basename);
-                console.log(cp_name);
-                if(dirs.indexOf(cp_name) === -1){
-                    console.log(window.requires.fs.copyFileSync(select_element.dataset.fullpath, window.requires.path.dirname(select_element.dataset.fullpath)+"/"+cp_name));
-                    break
-                }
-                i++;
-                
-            }
-        });
-
+for(const em of document.body.children){
+    if(em.className !== "dir" && em.className !== "file"){
+        em.addEventListener("click" ,()=>{select_element = null});
     }
 }
+
+window.api.create_local_shk("Ctrl+V");
+window.api.on("Ctrl+V", async ()=>{
+    if(select_element !== null){
+        let i = 1;
+        const dirs = fs.readdirSync(window.requires.path.dirname(select_element.dataset.fullpath));
+        const file_basename = select_element.textContent;
+        while(true){
+            dot_rindex = file_basename.lastIndexOf(".");
+            if(dot_rindex === -1){
+                dot_rindex = file_basename.length 
+            }
+            console.log(file_basename);
+            cp_name = file_basename.substring(0, dot_rindex)+" copy"+(i !== 1 ? ` ${i}`:"")+window.requires.path.extname(file_basename);
+            console.log(cp_name);
+            if(dirs.indexOf(cp_name) === -1){
+                console.log(window.requires.fs.copyFileSync(select_element.dataset.fullpath, window.requires.path.dirname(select_element.dataset.fullpath)+"/"+cp_name));
+                break
+            }
+            i++;
+            
+        }
+        console.log(select_element.dataset.fullpath);
+        console.log(window.requires.path.dirname(select_element.dataset.fullpath));
+        
+        const parent = document.querySelector(`.dir[data-fullpath="${window.requires.path.dirname(select_element.dataset.fullpath)}"`);
+        console.log(parent)
+        const i2 = await onclick_element(parent);
+        const i3 =  await onclick_element(parent);
+    }
+})
+// window.addEventListener("click" ,()=>{focusFlag = false});
+// palette_commands["OpenDir"] = `create_element(".", "dir", create_side())`
+async function copy_and_peast_listen(){
+    select_element = before_selected_selement;
+}
+let before_selected_selement = null;
 let select_element = null
-async function create_element(path, type, div, nest=0, intertPoint=null){
+async function create_element(path, type, nest=0, intertPoint=null){
     const element = document.createElement("div");
     element.className = type;
+    element.dataset.nest = nest;
+    const div = document.querySelector("#dir_side");
     console.log(type);
     console.log(type === "dir");
     console.log(type == "dir");
@@ -99,21 +112,33 @@ async function create_element(path, type, div, nest=0, intertPoint=null){
     // element.style.width = "300px"; 
     // element.style.height = "40px";
     element.dataset.status = "closed";
-    element.dataset.fullpath = window.requires.path.resolve(path);
+    element.dataset.fullpath = window.requires.path.resolve(path).replaceAll("\\", "/");
     element.style.display = "block";
-    element.onclick = async (event)=>{
-        focusFlag = true;
-        const target = event.target;
+    element.onclick = async (event)=>{onclick_element(event.target)}
+    if(intertPoint === null){
+        div.appendChild(element);
+    }else{
+        div.insertBefore(element, intertPoint.nextSibling)
+    }
+    // div.style.overflow = "scroll scroll";
+}
+async function onclick_element(target){
+        // focusFlag = true;
+        const type = target.className;
+        const path = target.dataset.fullpath;
+        const nest = Number(target.dataset.nest);
+        const div = document.querySelector("#dir_side");
         if(type == "file"){
-            if(select_element !== null){
-                select_element.style.color = "black";
+            if(before_selected_selement !== null){
+                before_selected_selement.style.color = "black";
             }
             target.style.color = "blue";
-            select_element = target;
+            before_selected_selement = target;
             console.log(path);
             let em = create_tab().dataset.fullpath;
             const fullpath = get_path(path);
             readFile(fullpath, em);
+            get_focus(fullpath);
         }else if(target.dataset.status === "closed"){
             target.style.background  = "gray";
             target.dataset.status = "opend";
@@ -122,11 +147,12 @@ async function create_element(path, type, div, nest=0, intertPoint=null){
             console.log(children);
             const DirFlags = await window.api.isDirs(children);
             for(let i=0,len=children.length;i<len;i++){
-               create_element(children[i], DirFlags[i] ? "dir":"file", div, nest+1, target);
+               create_element(children[i], DirFlags[i] ? "dir":"file", nest+1, target);
             }
         }else{
             target.style.background  = "white";
-            const delist = Array(...div.children).filter((em)=> window.requires.path.dirname(em.dataset.fullpath) ===  target.dataset.fullpath)
+            // const delist = Array(...div.children).filter((em)=> window.requires.path.dirname(em.dataset.fullpath) ===  target.dataset.fullpath)
+            const delist = Array(...div.children).filter((em)=> em.dataset.fullpath.indexOf(target.dataset.fullpath) !== -1 && target !== em)
             console.log(delist);
             for(const em of delist){
                 em.remove();
@@ -135,13 +161,6 @@ async function create_element(path, type, div, nest=0, intertPoint=null){
         }
         
     }
-    if(intertPoint === null){
-        div.appendChild(element);
-    }else{
-        div.insertBefore(element, intertPoint.nextSibling)
-    }
-    // div.style.overflow = "scroll scroll";
-}
 async function open_dir(){
     console.log("yaah")
     const args = await window.api.get_args();
@@ -151,7 +170,7 @@ async function open_dir(){
     if(open_dirs.length != 0){
         const dir = open_dirs[0];
         const div = create_side();
-        create_element(dir, "dir", div);
+        create_element(dir, "dir");
         return dir;
     }
 
