@@ -1,0 +1,6 @@
+#cmd_place{
+    position: absolute;
+    top: 0px;
+    height: 75vh;
+    overflow: auto;
+}

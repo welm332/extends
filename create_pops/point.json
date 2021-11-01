@@ -1,0 +1,5 @@
+{
+    "point":[
+        {"type":"script", "attr":{"src":"%dirname%/pop.js"}}
+    ]
+}

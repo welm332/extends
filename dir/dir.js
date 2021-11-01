@@ -13,6 +13,18 @@ file_name_keydown = async (event)=>{
     event.stopPropagation();
     
 };
+
+window.api.create_local_shk("Delete");
+window.api.on("Delete", async ()=>{
+    if(focusFlag && Math.abs(await window.api.show_message_box("question","確認","削除の確認",`${before_selected_selement.dataset.fullpath}を削除してもよろしいでしょうか`,["削除", "中断"])) !== 1){
+        fs.rmSync(before_selected_selement.dataset.fullpath);
+        const parent = document.querySelector(`.dir[data-fullpath="${window.requires.path.dirname(before_selected_selement.dataset.fullpath)}"`);
+        // console.log(parent)
+        const i2 = await onclick_element(parent);
+        const i3 =  await onclick_element(parent);
+    }
+    
+})
 window.api.create_local_shk("F2");
 window.api.on("F2", ()=>{
     if(focusFlag){
@@ -31,7 +43,7 @@ window.api.on("F2", ()=>{
 });
 
 window.api.create_local_shk("Ctrl+C");
-window.api.on("Ctrl+C", copy_and_peast_listen);
+window.api.on("Ctrl+C", copy_and_paste_listen);
 focusFlag = true;
 default_create_tab = create_tab;
 create_tab = ()=>{
@@ -52,7 +64,8 @@ window.api.create_local_shk("Ctrl+V");
 window.api.on("Ctrl+V", async ()=>{
     if(select_element !== null){
         let i = 1;
-        const dirs = fs.readdirSync(window.requires.path.dirname(select_element.dataset.fullpath));
+        const dirname = window.requires.path.dirname(select_element.dataset.fullpath);
+        const dirs = fs.readdirSync(dirname);
         const file_basename = select_element.textContent;
         while(true){
             dot_rindex = file_basename.lastIndexOf(".");
@@ -61,6 +74,7 @@ window.api.on("Ctrl+V", async ()=>{
             }
             cp_name = file_basename.substring(0, dot_rindex)+" copy"+(i !== 1 ? ` ${i}`:"")+window.requires.path.extname(file_basename);
             if(dirs.indexOf(cp_name) === -1){
+                fs.copyFileSync(dirname+`/${file_basename}`, dirname+`/${cp_name}`);
                 break
             }
             i++;
@@ -75,7 +89,7 @@ window.api.on("Ctrl+V", async ()=>{
         const i3 =  await onclick_element(parent);
     }
 })
-async function copy_and_peast_listen(){
+async function copy_and_paste_listen(){
     // console.info("un");
     // console.log(focusFlag);
     if(focusFlag){
@@ -101,14 +115,19 @@ async function create_element(path, type, nest=0, intertPoint=null){
         file_inputer.onclick = (event1)=>{
             // return 
             fname_input = document.createElement("input");
-            fname_input.onkeydown = (event2)=>{
+            fname_input.onkeydown = async (event2)=>{
                 // console.log(event2);
                 if(event2.key === "Enter"){
                     window.requires.fs.writeFileSync(path+"/"+event2.target.value, "");
+                    console.log(path)
+                    const parent = document.querySelector(`.dir[data-fullpath="${path.replaceAll("\\", "/").toLowerCase()}"]`)
                     event2.target.remove();
+                    const i2 = await onclick_element(parent);
+                    const i3 =  await onclick_element(parent);
                 }
             };
             div.insertBefore(fname_input, element.nextSibling);
+            fname_input.focus();
             event1.stopPropagation();
         };
         
@@ -125,16 +144,17 @@ async function create_element(path, type, nest=0, intertPoint=null){
         dir_inputer.className = "dir_name_inputer";
         dir_inputer.onclick = (event1)=>{
             // return 
-            fname_input = document.createElement("input");
-            fname_input.onkeydown = (event2)=>{
+            dir_input = document.createElement("input");
+            dir_input.onkeydown = (event2)=>{
                 // console.log(event2);
                 if(event2.key === "Enter"){
                     window.requires.fs.mkdirSync(path+"/"+event2.target.value);
                     event2.target.remove();
                 }
             };
-            div.insertBefore(fname_input, element.nextSibling);
+            div.insertBefore(dir_input, element.nextSibling);
             event1.stopPropagation();
+            dir_input.focus();
         };
         
         
@@ -145,7 +165,7 @@ async function create_element(path, type, nest=0, intertPoint=null){
     // element.style.width = "300px"; 
     // element.style.height = "40px";
     element.dataset.status = "closed";
-    element.dataset.fullpath = window.requires.path.resolve(path).replaceAll("\\", "/");
+    element.dataset.fullpath = window.requires.path.resolve(path).replaceAll("\\", "/").toLowerCase();
     element.style.display = "block";
     element.onclick = async (event)=>{
         onclick_element(event.target);
@@ -176,6 +196,9 @@ async function onclick_element(target){
                 let em = create_tab().dataset.fullpath;
                 const fullpath = get_path(path);
                 readFile(fullpath, em);
+                get_focus(fullpath);
+            }else{
+                const fullpath = get_path(path);
                 get_focus(fullpath);
             }
             focusFlag = true;
