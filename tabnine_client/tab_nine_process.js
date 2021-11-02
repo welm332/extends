@@ -1,6 +1,7 @@
 // const i = require(`${window.requires.dirname}/../extends/tabnine_client/get_tabnine_path.js`);
 // console.log(i);
 // txt_editor.set
+
 completes = [];
 function create_editor(element){
   const editor = ace.edit(element);
@@ -44,7 +45,9 @@ function create_editor(element){
   ace.require('ace/ext/settings_menu').init(txt_editor);
     return editor;
 }
-window.api.create_process_shell(get_tabnine_path("C:/Users/taiki/Desktop/program/portfolio/150819_electron_text_editor/test/TabNine/binaries"), "Tabnine");
+async function connect_tabnine(){
+    const userprofile = await window.api.env("USERPROFILE");
+window.api.create_process_shell(get_tabnine_path(userprofile+"/Desktop/program/portfolio/150819_electron_text_editor/test/TabNine/binaries"), "Tabnine");
 window.api.on("child_process_session::Tabnine",(event,value)=>{
     // console.log(value.data);
     try{
@@ -70,10 +73,11 @@ window.api.on("child_process_session::Tabnine",(event,value)=>{
   }
 
 
+}
 
 // const spawn =window.requires.exe.spawn;
 // const spawnTest = (() => {
-//   const dir = spawn(get_tabnine_path("C:/Users/taiki/Desktop/program/portfolio/150819_electron_text_editor/test/TabNine/binaries"), {shell: true});       // <== shell: true option
+//   const dir = spawn(get_tabnine_path("Desktop/program/portfolio/150819_electron_text_editor/test/TabNine/binaries"), {shell: true});       // <== shell: true option
 //   dir.stdout.on('data', (data) => {
 //     console.log(`spawn stdout: ${data}`);
 //   });
@@ -188,5 +192,5 @@ function get_tabnine_path(binary_dir){
     }
 }
 // exports["get_tabnine_path"] = get_tabnine_path;
-// console.log(get_tabnine_path("C:/Users/taiki/Desktop/program/portfolio/150819_electron_text_editor/test/TabNine/binaries").replaceAll("\\","/"))
+// console.log(get_tabnine_path("/Desktop/program/portfolio/150819_electron_text_editor/test/TabNine/binaries").replaceAll("\\","/"))
 // itor/test/TabNine/binaries").replaceAll("\\","/"))
