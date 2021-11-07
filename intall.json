@@ -1,0 +1,28 @@
+{
+    "install":[
+        {
+            "name":"webviewer",
+            "description":"create command (webview tab)"
+        },
+        {
+            "name":"tab_colors",
+            "description":"indents color"
+        },
+        {
+            "name":"tabnine_client",
+            "description":"auto complete (tabnine client)"
+        },
+        {
+            "name":"markdown_tester",
+            "description":"create command (test opentab for markdown likes)"
+        },
+        {
+            "name":"dir",
+            "description":"you can open directory"
+        },
+        {
+            "name":"cmd",
+            "description":"create command (open prompt)"
+        }
+        ]
+}

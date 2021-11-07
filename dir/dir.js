@@ -242,6 +242,16 @@ async function open_dir(){
 window.addEventListener("load", open_dir);
     
 function create_side(){
+    if(document.querySelector("#input_area").style.padding !== "34px 0px 20px 200px"){
+        document.querySelector("#input_area").style.padding = "34px 0px 20px 200px";
+    }else{
+        document.querySelector("#input_area").style.padding = "34px 0px 20px 0px";
+    }
+    
+    if(document.querySelector("#dir_side") !== null){
+        return;
+        
+    }
     // return;
     let div = document.createElement('div');
     a = document.querySelector("#dialogspace");
@@ -249,11 +259,6 @@ function create_side(){
     div.style.position = "absolute";
     div.style.top = "100px";
     document.body.insertBefore( div,a);
-    if(document.querySelector("#input_area").style.padding !== "34px 0px 20px 200px"){
-        document.querySelector("#input_area").style.padding = "34px 0px 20px 200px";
-    }else{
-        document.querySelector("#input_area").style.padding = "34px 0px 20px 0px";
-    }
     div.style.height = "75vh";
     div.style.overflow = "auto auto";
     return div;

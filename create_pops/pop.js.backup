@@ -5,19 +5,17 @@ document.addEventListener("click",()=>{
     }
 })
 function create_popup(word_list,old_prefix){
-    // console.log(word_list)
+    console.log(word_list)
     if(word_list.length === 0){return}
     a = document.querySelector(`.editor[data-fullpath="${tab_opend_path}"]`)
     // after = word_list.map((em)=>em["after"]);
     z = popups[`.editor[data-fullpath="${tab_opend_path}"]`];
-    if(z !== undefined){
-        // console.log("test");
-        z.hide();
-    }
-        // console.log("first")
+    if(z == undefined){
+        console.log("first")
         i = require("ace/autocomplete/popup").AcePopup
         z = i(a)
         popups[`.editor[data-fullpath="${tab_opend_path}"]`] = z;
+    }
     results  = word_list;
     var renderer = txt_editor.renderer;
     var lineHeight = renderer.layerConfig.lineHeight;
@@ -33,10 +31,10 @@ function create_popup(word_list,old_prefix){
     if(!z.isOpen){
         z.show(pos, lineHeight);
         z.focus()
-        // console.log("focused")
-        // a.onkeydown =(e)=>{console.log(e.key)}
-        window.api.create_local_shk("Ctrl+Down");
-        window.api.on("Ctrl+Down", ()=>{
+        console.log("focused")
+        a.onkeydown =(e)=>{console.log(e.key)}
+        window.api.create_local_shk("Down");
+        window.api.on("Down", ()=>{
             z.goTo("down");
             // if((row=z.getRow())<results.length){
             //     z.setRow(row+1);
@@ -53,8 +51,8 @@ function create_popup(word_list,old_prefix){
             
         });
         
-        window.api.create_local_shk("Ctrl+Up");
-        window.api.on("Ctrl+Up", ()=>{
+        window.api.create_local_shk("Up");
+        window.api.on("Up", ()=>{
             z.goTo("up");
             // if((row=z.getRow())>0){
             //     z.setRow(row-1);
@@ -71,33 +69,14 @@ function create_popup(word_list,old_prefix){
             
         });
         
-        // window.api.create_local_shk("Alt+Enter");
+        window.api.create_local_shk("Alt+Enter");
     }
-    // window.api.off("Alt+Enter");
-    window.onkeydown = (event)=>{
-        // console.log(event)
-        // // return
-        // console.log(event)
-        // console.log(z.isOpen);
-        // console.log(z.isShow);
-        // console.log(event.shiftKey)
-        if(!z.isOpen ||event.key !== "Enter" ){
-            return;
-        }
-        if(!event.ctrlKey){
-            // console.error("rrrrrr")
-            // popups[`.editor[data-fullpath="${tab_opend_path}"]`].hide()
-            // z.removeLines();
-            // z.hide();
-            z.destroy()
-            return
-        }
-        // if(event)
-        
-        // console.log(old_prefix)
+    window.api.off("Alt+Enter");
+    window.api.on("Alt+Enter", ()=>{
+        console.log(old_prefix)
         len = old_prefix.length
         curpos = txt_editor.getCursorPosition();
-        // console.log(curpos);
+        console.log(curpos);
         const range = new ace.Range(
             curpos.row,
             curpos.column-len,
@@ -108,8 +87,6 @@ function create_popup(word_list,old_prefix){
         index = indexToPosition(value, curpos)
         // console.log( z.getData(z.getRow()))
         const data = z.getData(z.getRow());
-        z.removeLines()
-        z.hide()
         txt_editor.session.replace(range, data.substring(0,data.lastIndexOf("\t") ))
         // console.log(txt_editor.session.getValue())
         // console.log(index)
@@ -129,14 +106,15 @@ function create_popup(word_list,old_prefix){
         // )
         // txt_editor.session.remove(range2)
         // txt_editor.execCommand("insertstring", z.getData(z.getRow()));
+        z.removeLines()
+        z.hide()
         window.api.delete_local_shk("Alt+Enter");
         window.api.delete_local_shk("Up");
         window.api.delete_local_shk("Down");
         window.api.off("Alt+Enter");
         window.api.off("Up");
         window.api.off("Down");
-        return false;
-    };
+    });
     
     return z;
     // txt_editor.execCommand("insertstring", "rest");  

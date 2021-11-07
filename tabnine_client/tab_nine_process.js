@@ -66,7 +66,12 @@ window.api.on("child_process_session::Tabnine",(event,value)=>{
   default_onchange = Onchange;
   Onchange = async()=>{
         default_onchange();
-        line = txt_editor.session.getLine(txt_editor.getCursorPosition().row);
+        if(popups[tab_opend_path] !== undefined){
+            popups[tab_opend_path].hide();
+        }
+        curpos = txt_editor.getCursorPosition();
+        line = txt_editor.session.getLine(curpos.row);
+        line = line.substring(0, curpos.column);
         console.log(line);
         await window.api.child_process_session_stdin(`{"version": "1.0.0", "request": {"Autocomplete": {"before": "${line.trim()}","after": "", "region_includes_beginning": true, "region_includes_end": true, "filename": "${window.requires.path.basename(tab_opend_path)}"}}}\n`,"Tabnine");
       
@@ -74,6 +79,7 @@ window.api.on("child_process_session::Tabnine",(event,value)=>{
 
 
 }
+connect_tabnine()
 
 // const spawn =window.requires.exe.spawn;
 // const spawnTest = (() => {

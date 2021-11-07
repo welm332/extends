@@ -1,0 +1,8 @@
+{
+    "win32":[
+        "cmd.exe",
+        "powershell.exe",
+        "wsl.exe"],
+    "linux":[
+        "bash"]
+}
