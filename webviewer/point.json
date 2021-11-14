@@ -1,0 +1,9 @@
+{
+    "load":[
+        {"type":"script", "attr":{"src":"%dirname%/view.js"}}
+    ],
+    "download":[
+        "web.html",
+        "view.js"
+        ]
+}
