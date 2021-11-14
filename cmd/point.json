@@ -1,5 +1,5 @@
 {
-    "point":[
+    "load":[
         {"type":"script", "attr":{"src":"%dirname%/cmd.js"}},
         {"type":"link", "attr":{"href":"%dirname%/cmd.css","rel":"stylesheet"}}
     ]

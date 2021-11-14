@@ -3,7 +3,7 @@ async function getloads(auto_reader=false){
     const extends_path = dirname+"/../extends";
     const fs = window.requires.fs;
     let extenders = fs.readdirSync(extends_path);
-    const deletes = [".git", ".gitignore", "remote"];
+    const deletes = [".git", ".gitignore", "remote","install.json"];
     const path = window.requires.path;
     // extename_dict = {"js":"script","css":"link"}
     extenders = extenders.filter((em)=>{return deletes.indexOf(em) === -1});
@@ -12,7 +12,7 @@ async function getloads(auto_reader=false){
     for(const extend of extenders){
         const dir = fs.readdirSync(`${extends_path}/${extend}`);
         if(dir.indexOf("point.json") !== -1){
-            const point =JSON.parse(fs.readFileSync(`${extends_path}/${extend}/point.json`, 'utf8'))["point"];
+            const point =JSON.parse(fs.readFileSync(`${extends_path}/${extend}/point.json`, 'utf8'))["load"];
             for(import_dict of point){
                 const em = document.createElement(import_dict["type"]);
                 for(const key of Object.keys(import_dict["attr"])){

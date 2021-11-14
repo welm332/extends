@@ -1,5 +1,0 @@
-{
-    "point":[
-        {"type":"script", "attr":{"src":"%dirname%/view.js"}}
-    ]
-}

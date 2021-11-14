@@ -1,5 +1,5 @@
 {
-    "point":[
+    "load":[
         {"type":"script", "attr":{"src":"%dirname%/tab_nine_process.js"}}
     ]
 }

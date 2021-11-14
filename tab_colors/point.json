@@ -1,5 +1,5 @@
 {
-    "point":[
+    "load":[
         {"type":"link", "attr":{"href":"%dirname%/tab_colors.css","rel":"stylesheet"}}
     ]
 }

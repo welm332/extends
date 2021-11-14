@@ -1,5 +1,5 @@
 {
-    "point":[
+    "load":[
         {"type":"script", "attr":{"src":"https://cdn.rawgit.com/chjj/marked/master/marked.min.js"}},
         {"type":"script", "attr":{"src":"%dirname%/print.js"}}
   ]
