@@ -1,5 +1,9 @@
 {
     "load":[
         {"type":"link", "attr":{"href":"%dirname%/tab_colors.css","rel":"stylesheet"}}
-    ]
+    ],
+    "download":[
+        "tab_colors.css",
+        "tab_colors.js"
+        ]
 }
