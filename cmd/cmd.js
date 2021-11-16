@@ -35,23 +35,48 @@ async function openCmd(){
             const line = document.createElement("div");
             line.className = "line";
             line.textContent = data;
-            document.querySelector("#cmd_place").appendChild(line);
-            if(inputer_reg.test(data)){
-                console.log(data.match(RegExp("[A-Z]:(\\\\|/)\\S*"))[0]);
-                // console.log(data.match(RegExp("[A-Z]:(\\\\|/)\\S*"))[0].substring(0,data.lastIndexOf(">")))
-                const dirs = fs.readdirSync(data.match(RegExp("[A-Z]:(\\\\|/)\\S*"))[0].replaceAll(">", ""));
-                line.style.display = "inline-block";
-                const input = document.createElement("input");
+            if((before_inputer=document.querySelector("#cmd_place > input"))){
+                before_inputer.remove();
+                }
+            // console.log(lastChild)
                 
-                input.dataset.children = dirs.join("|");
+            document.querySelector("#cmd_place").appendChild(line);
+            if(inputer_reg.test(data) || 1){
+                // console.log(data.match(RegExp("[A-Z]:(\\\\|/)\\S*"))[0]);
+                // console.log(data.match(RegExp("[A-Z]:(\\\\|/)\\S*"))[0].substring(0,data.lastIndexOf(">")))
+                // line.style.display = "inline-block";
+                const input = document.createElement("input");
+                if(inputer_reg.test(data)){
+                    const dirs = fs.readdirSync(data.match(RegExp("[A-Z]:(\\\\|/)\\S*"))[0].replaceAll(">", ""));
+                    input.dataset.children = dirs.join("|");
+                }
                 input.dataset.index = 0;
                 input.style.backgroundColor = "#1e1e1e";//document.querySelector("#cmd_place").style.backgroundColor;
                 input.style.color = "white";
                 input.style.outline =  "none";
                 input.onkeydown = async (event)=>{
                     console.log(event.key);
-                    if(event.key === "Tab"){
-                        const dirs = event.target.dataset.children.split("|");
+                    if(event.key === "Tab" && event.target.dataset.children){
+                        let dirs = event.target.dataset.children.split("|");
+                        const target = event.target;
+                        let start_index = target.selectionStart;
+                        if(target.dataset.autocomplete_index !== undefined){
+                            console.info("atari");
+                            start_index = Number(target.dataset.autocomplete_index);
+                            
+                        }
+                        if(target.selectionStart !== 0 && target.value[start_index-1] != " "){
+                            word_start_index = target.value.substring(0,start_index).lastIndexOf(" ");
+                            const write =target.value.substring(word_start_index, start_index).trim();
+                            console.log(write)
+                            dirs = dirs.filter((em)=>em.indexOf(write)===0);
+                            dirs = dirs.map((em)=>em.substring(em.indexOf(write) !== -1 ? write.length: 0));
+                            if(target.dataset.autocomplete_index === undefined){
+                                input.dataset.autocomplete_index = start_index;
+
+                            }   
+                        }
+                        
                         console.log(dirs);
                         const index = Number(event.target.dataset.index);
                         const replace_index  = index === 0 ? dirs.length-1 : index-1;
@@ -69,6 +94,10 @@ async function openCmd(){
                         
                         event.preventDefault();
                         return;
+                    }
+                    else if(event.target.dataset.autocomplete_index !== undefined){
+                        delete event.target.dataset.autocomplete_index;
+                        event.target.dataset.index = 0
                     }
                     if(event.key === "ArrowUp"){
                         console.log("UUUPP");

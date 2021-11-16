@@ -2,5 +2,12 @@
     "load":[
         {"type":"script", "attr":{"src":"%dirname%/dir.js"}},
         {"type":"link", "attr":{"href":"%dirname%/dir.css","rel":"stylesheet"}}
+    ],
+    "download":[
+        "plus.png",
+        "folder_icon.png",
+        "file_icon.png",
+        "dir.js",
+        "dir.css"
     ]
 }
