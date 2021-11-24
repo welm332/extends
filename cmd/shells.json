@@ -1,7 +1,7 @@
 {
     "win32":[
-        "cmd.exe",
         "powershell.exe",
+        "cmd.exe",
         "wsl.exe"],
     "linux":[
         "bash"]

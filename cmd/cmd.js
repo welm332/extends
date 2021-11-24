@@ -15,16 +15,30 @@ if(palette_commands !== null){
 
 async function openCmd(){
     tab=create_tab();
+    const commands_dict = {};
+    if((await window.requires.extensions.extensions("list","-lo")).indexOf("dir") !== -1){
+        commands_dict["opendir .*?"] = (value)=>{
+            const dir_path = value.substring(8);
+            open_dir([dir_path])
+        }
+    }
     const inputer_reg = RegExp("[A-Z]:(\\\\|/)\\S*>$");
     console.log(inputer_reg);
     // console.log(inputer_reg.test(data));
     // loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/webviewer/web.html")
     // console.log(get_terms[0])
-    window.api.create_process_shell(get_terms()[1], "Cmd");
+    const terms = get_terms();
+    let prompt_select = await window.api.show_message_box("question","選択","ターミナルの選択","どのターミナルを開きますか?", terms);
+    if (prompt_select === -1){
+        prompt_select = 0;
+    }
+    
+    window.api.create_process_shell(terms[prompt_select], "Cmd");
     loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/cmd/cmd.html")
     const commands_history = [""];
     let now_num = 0;
-    tab.querySelector("#tab_name").textContent ="commandPrompt";
+    tab.querySelector("#tab_name").textContent = terms[prompt_select];
+    window.api.off("child_process_session::Cmd",(event,value)=>{})
     window.api.on("child_process_session::Cmd",(event,value)=>{
         // console.log(value.data);
     // console.log(value.data);
@@ -141,6 +155,10 @@ async function openCmd(){
                         console.log(tab.dataset.fullpath)
                         value = ("python "+tab.dataset.fullpath).replaceAll("\n","");
                         console.log(value.indexOf("\n"))
+                    }
+                    // オリジナルコマンド処理
+                    if((origin_command =  Object.keys(commands_dict).filter((em)=>RegExp(em).test(value))).length !== 0){
+                        commands_dict[origin_command[0]](value);
                     }
                         
                     

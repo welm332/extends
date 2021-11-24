@@ -1,0 +1,8 @@
+{
+    "load":[
+        {"type":"script", "attr":{"src":"%dirname%/uncord.js"}}
+    ],
+    "download":[
+        "uncord.js"
+        ]
+}

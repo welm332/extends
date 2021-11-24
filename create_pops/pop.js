@@ -44,14 +44,14 @@ function create_popup(word_list,old_prefix){
             
         });
         
-        window.api.create_local_shk("End");
-        window.api.on("End", ()=>{
-            z.goTo("end");
-            // if((row=z.getRow())>0){
-            //     z.setRow(row-1);
-            // }
+        // window.api.create_local_shk("End");
+        // window.api.on("End", ()=>{
+        //     z.goTo("end");
+        //     // if((row=z.getRow())>0){
+        //     //     z.setRow(row-1);
+        //     // }
             
-        });
+        // });
         
         window.api.create_local_shk("Ctrl+Up");
         window.api.on("Ctrl+Up", ()=>{
@@ -62,14 +62,14 @@ function create_popup(word_list,old_prefix){
             
         });
         
-        window.api.create_local_shk("Start");
-        window.api.on("Start", ()=>{
-            z.goTo("start");
-            // if((row=z.getRow())>0){
-            //     z.setRow(row-1);
-            // }
+        // window.api.create_local_shk("Start");
+        // window.api.on("Start", ()=>{
+        //     z.goTo("start");
+        //     // if((row=z.getRow())>0){
+        //     //     z.setRow(row-1);
+        //     // }
             
-        });
+        // });
         
         // window.api.create_local_shk("Alt+Enter");
     }
@@ -129,12 +129,10 @@ function create_popup(word_list,old_prefix){
         // )
         // txt_editor.session.remove(range2)
         // txt_editor.execCommand("insertstring", z.getData(z.getRow()));
-        window.api.delete_local_shk("Alt+Enter");
-        window.api.delete_local_shk("Up");
-        window.api.delete_local_shk("Down");
-        window.api.off("Alt+Enter");
-        window.api.off("Up");
-        window.api.off("Down");
+        window.api.delete_local_shk("Ctrl+Up");
+        window.api.delete_local_shk("Ctrl+Down");
+        window.api.off("Ctrl+Up");
+        window.api.off("Ctrl+Down");
         return false;
     };
     

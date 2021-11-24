@@ -1,3 +1,78 @@
+window.addEventListener('DOMContentLoaded', ()=>{
+    palette_commands["open dir"] = `
+        txt_em = create_search_window();
+        txt_em.setAttribute("list", "commandLists");
+        const data_list = document.getElementById("datalist").firstChild
+        txt_em.onkeypress = function (event) {
+            let value = event.target.value;
+            if (event.key === "Enter" && fs.existsSync(event.target.value)) {
+                open_dir([event.target.value]);
+                event.target.parentElement.remove();
+                
+          }else{
+                while(data_list.firstChild){
+                    data_list.removeChild(data_list.firstChild)
+                }
+                let dirs = [];
+                if(fs.existsSync(value)){
+                    dirs = fs.readdirSync(value)
+                }else if(value.replaceAll("\\\\", "/").indexOf("/") !== -1){
+                    if(fs.existsSync(value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/")))){
+                        value = value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/"))
+                        dirs = fs.readdirSync(value)
+                        
+                    }
+                    
+                }
+                for(const em of dirs){
+                    
+                    const option = document.createElement("option");
+                    option.value = value+"/"+em;
+                    data_list.appendChild(option)
+                }
+          }  
+        }
+    
+    `;
+    
+});
+if(palette_commands !== null){
+    palette_commands["open dir"] = `
+        txt_em = create_search_window();
+        txt_em.setAttribute("list", "commandLists");
+        const data_list = document.getElementById("datalist").firstChild
+        txt_em.onkeypress = function (event) {
+            let value = event.target.value;
+            if (event.key === "Enter" && fs.existsSync(event.target.value)) {
+                open_dir([event.target.value]);
+                event.target.parentElement.remove();
+                
+          }else{
+                while(data_list.firstChild){
+                    data_list.removeChild(data_list.firstChild)
+                }
+                let dirs = [];
+                if(fs.existsSync(value)){
+                    dirs = fs.readdirSync(value)
+                }else if(value.replaceAll("\\\\", "/").indexOf("/") !== -1){
+                    if(fs.existsSync(value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/")))){
+                        value = value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/"))
+                        dirs = fs.readdirSync(value)
+                        
+                    }
+                    
+                }
+                for(const em of dirs){
+                    
+                    const option = document.createElement("option");
+                    option.value = value+"/"+em;
+                    data_list.appendChild(option)
+                }
+          }  
+        }
+    `;}
+
+
 // const beforefunc = open_args;
 window.api.create_local_shk("Ctrl+B");
 window.api.on("Ctrl+B", create_side);
@@ -17,7 +92,11 @@ file_name_keydown = async (event)=>{
 window.api.create_local_shk("Delete");
 window.api.on("Delete", async ()=>{
     if(focusFlag && Math.abs(await window.api.show_message_box("question","確認","削除の確認",`${before_selected_selement.dataset.fullpath}を削除してもよろしいでしょうか`,["削除", "中断"])) !== 1){
-        fs.rmSync(before_selected_selement.dataset.fullpath);
+        if(before_selected_selement.className === "file"){
+            fs.rmSync(before_selected_selement.dataset.fullpath);
+        }else{
+            fs.rmdirSync(before_selected_selement.dataset.fullpath, { recursive: true });
+        }
         const parent = document.querySelector(`.dir[data-fullpath="${window.requires.path.dirname(before_selected_selement.dataset.fullpath)}"`);
         // console.log(parent)
         const i2 = await onclick_element(parent);
@@ -185,46 +264,49 @@ async function onclick_element(target){
         const path = target.dataset.fullpath;
         const nest = Number(target.dataset.nest);
         const div = document.querySelector("#dir_side");
-        if(type == "file"){
+        // if(true){
             if(before_selected_selement !== null){
                 before_selected_selement.style.color = "black";
             }
             target.style.color = "blue";
             before_selected_selement = target;
-            if(document.querySelector(`.tab[data-fullpath="${path.toLowerCase()}"]`) === null){
-                
-                let em = create_tab().dataset.fullpath;
-                const fullpath = get_path(path);
-                readFile(fullpath, em);
-                get_focus(fullpath);
-            }else{
-                const fullpath = get_path(path);
-                get_focus(fullpath);
+            if(type == "file"){
+                if(document.querySelector(`.tab[data-fullpath="${path.toLowerCase()}"]`) === null){
+                    
+                    let em = create_tab().dataset.fullpath;
+                    const fullpath = get_path(path);
+                    readFile(fullpath, em);
+                    get_focus(fullpath);
+                }else{
+                    const fullpath = get_path(path);
+                    get_focus(fullpath);
+                }
             }
             focusFlag = true;
-        }else if(target.dataset.status === "closed"){
-            target.style.background  = "gray";
-            target.dataset.status = "opend";
-            let children = fs.readdirSync(path);
-            children =children.map((child)=>path+"/"+child);
-            const DirFlags = await window.api.isDirs(children);
-            for(let i=0,len=children.length;i<len;i++){
-               create_element(children[i], DirFlags[i] ? "dir":"file", nest+1, target);
+        // }
+        if(target.className === "dir"){
+            if(target.dataset.status === "closed"){
+                target.style.background  = "gray";
+                target.dataset.status = "opend";
+                let children = fs.readdirSync(path);
+                children =children.map((child)=>path+"/"+child);
+                const DirFlags = await window.api.isDirs(children);
+                for(let i=0,len=children.length;i<len;i++){
+                   create_element(children[i], DirFlags[i] ? "dir":"file", nest+1, target);
+                }
+            }else{
+                target.style.background  = "white";
+                // const delist = Array(...div.children).filter((em)=> window.requires.path.dirname(em.dataset.fullpath) ===  target.dataset.fullpath)
+                const delist = Array(...div.children).filter((em)=> em.dataset.fullpath.indexOf(target.dataset.fullpath) !== -1 && target !== em)
+                for(const em of delist){
+                    em.remove();
+                }
+                target.dataset.status = "closed";
             }
-        }else{
-            target.style.background  = "white";
-            // const delist = Array(...div.children).filter((em)=> window.requires.path.dirname(em.dataset.fullpath) ===  target.dataset.fullpath)
-            const delist = Array(...div.children).filter((em)=> em.dataset.fullpath.indexOf(target.dataset.fullpath) !== -1 && target !== em)
-            for(const em of delist){
-                em.remove();
-            }
-            target.dataset.status = "closed";
         }
         
     }
-async function open_dir(){
-    const args = await window.api.get_args();
-    const open_elements = args["Others"];
+async function open_dir(open_elements){
     const DirFlags  = await window.api.isDirs(open_elements);
     const open_dirs = open_elements.filter((elm, index) =>DirFlags[index]);
     if(open_dirs.length != 0){
@@ -239,8 +321,13 @@ async function open_dir(){
     // console.log(i)
     
 };
-window.addEventListener("load", open_dir);
-    
+window.addEventListener("load", async ()=>{
+    const args = await window.api.get_args();
+    const open_elements = args["Others"];
+    open_dir(open_elements)
+    }
+);
+
 function create_side(){
     if(document.querySelector("#input_area").style.padding !== "34px 0px 20px 200px"){
         document.querySelector("#input_area").style.padding = "34px 0px 20px 200px";
@@ -249,7 +336,7 @@ function create_side(){
     }
     
     if(document.querySelector("#dir_side") !== null){
-        return;
+        return document.querySelector("#dir_side") ;
         
     }
     // return;
