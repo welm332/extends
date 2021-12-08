@@ -10,18 +10,14 @@ window.addEventListener('DOMContentLoaded', ()=>{
                 event.target.parentElement.remove();
                 
           }else{
-                while(data_list.firstChild){
-                    data_list.removeChild(data_list.firstChild)
-                }
                 let dirs = [];
-                if(fs.existsSync(value)){
-                    dirs = fs.readdirSync(value)
-                }else if(value.replaceAll("\\\\", "/").indexOf("/") !== -1){
-                    if(fs.existsSync(value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/")))){
+                if(value.replaceAll("\\\\", "/")[value.length-1] === "/"){
                         value = value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/"))
-                        dirs = fs.readdirSync(value)
+                        dirs = fs.readdirSync(value);
                         
-                    }
+                        while(data_list.firstChild){
+                            data_list.removeChild(data_list.firstChild)
+                        }
                     
                 }
                 for(const em of dirs){
@@ -48,18 +44,14 @@ if(palette_commands !== null){
                 event.target.parentElement.remove();
                 
           }else{
-                while(data_list.firstChild){
-                    data_list.removeChild(data_list.firstChild)
-                }
                 let dirs = [];
-                if(fs.existsSync(value)){
-                    dirs = fs.readdirSync(value)
-                }else if(value.replaceAll("\\\\", "/").indexOf("/") !== -1){
-                    if(fs.existsSync(value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/")))){
+                if(value.replaceAll("\\\\", "/")[value.length-1] === "/"){
                         value = value.substring(0,value.replaceAll("\\\\", "/").lastIndexOf("/"))
-                        dirs = fs.readdirSync(value)
+                        dirs = fs.readdirSync(value);
                         
-                    }
+                        while(data_list.firstChild){
+                            data_list.removeChild(data_list.firstChild)
+                        }
                     
                 }
                 for(const em of dirs){
@@ -68,7 +60,7 @@ if(palette_commands !== null){
                     option.value = value+"/"+em;
                     data_list.appendChild(option)
                 }
-          }  
+          }   
         }
     `;}
 

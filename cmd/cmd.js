@@ -49,6 +49,14 @@ async function openCmd(){
             const line = document.createElement("div");
             line.className = "line";
             line.textContent = data;
+            const urlley = RegExp('(ftp|http|https):\/\/[^ "]+')
+            if(urlley.test(data)){
+                target = data.match(urlley);
+                url_index = target["index"];
+                line.innerHTML = `${data.substring(0,url_index)}<a href="#" title="urlをクリックするとリンクに飛びます" onclick="window.requires.exe.execSync('start ${data.substring(url_index,url_index+target[0].length)}');return false">${data.substring(url_index,url_index+target[0].length)}</a>${data.substring(url_index+target[0].length)}`
+                
+                
+            }
             if((before_inputer=document.querySelector("#cmd_place > input"))){
                 before_inputer.remove();
                 }
