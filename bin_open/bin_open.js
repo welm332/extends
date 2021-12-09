@@ -11,8 +11,6 @@ readFile = (path, replacement = tab_opend_path) =>{
         "jpg" :"image/jpeg",
         "jpeg"	:"image/jpeg",
         "png"	:"image/png",
-        "mp4":"application/mp4",
-        "json":"application/json",
         "pdf"	:"application/pdf",
     }
     console.log(replacement);
@@ -48,23 +46,3 @@ readFile = (path, replacement = tab_opend_path) =>{
         before_readFile(path, replacement) 
     }
 }
-// function bin_read(){
-//         mimes = {
-//         "htm" :"text/html",
-//         "html"	:"text/html",
-//         "xml"	:"text/xml",
-//         "gif"	:"image/gif",
-//         "jpg" :"image/jpeg",
-//         "jpeg"	:"image/jpeg",
-//         "png"	:"image/png",
-//         "doc"	:"application/msword",
-//         "pdf"	:"application/pdf",
-//     }
-    
-//     const tab=create_tab();
-//     loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"),`/../extends/bin_open/bin.html`);
-//     bin_em = document.getElementById("bin");
-//     bin_em.type = mimes["png"]
-//     bin_em.data = "C:/Users/taiki/Desktop/program/portfolio/150819_electron_text_editor/python/func221.png";
-    
-// }
