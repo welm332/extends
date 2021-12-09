@@ -135,19 +135,22 @@ window.api.create_local_shk("Ctrl+V");
 window.api.on("Ctrl+V", async ()=>{
     if(select_element !== null){
         let i = 1;
-        const dirname = window.requires.path.dirname(select_element.dataset.fullpath);
+        const dirname = before_selected_selement.className === "dir"  ? before_selected_selement.dataset.fullpath : window.requires.path.dirname(select_element.dataset.fullpath);
         const dirs = fs.readdirSync(dirname);
         const file_basename = select_element.textContent;
+        // ファイル名にcopyをつけるためにファイル名、拡張子に分割
+        dot_rindex = file_basename.lastIndexOf(".");
+        if(dot_rindex === -1){
+            dot_rindex = file_basename.length 
+        }
+        // copyファイルが複数ある場合のためにループで存在しないファイルを探す
+        let cp_name = file_basename
         while(true){
-            dot_rindex = file_basename.lastIndexOf(".");
-            if(dot_rindex === -1){
-                dot_rindex = file_basename.length 
-            }
-            cp_name = file_basename.substring(0, dot_rindex)+" copy"+(i !== 1 ? ` ${i}`:"")+window.requires.path.extname(file_basename);
             if(dirs.indexOf(cp_name) === -1){
-                fs.copyFileSync(dirname+`/${file_basename}`, dirname+`/${cp_name}`);
+                fs.copyFileSync(select_element.dataset.fullpath, dirname+`/${cp_name}`);
                 break
             }
+            cp_name = file_basename.substring(0, dot_rindex)+" copy"+(i !== 1 ? ` ${i}`:"")+window.requires.path.extname(file_basename);
             i++;
             
         }
