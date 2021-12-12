@@ -194,7 +194,7 @@ async function create_element(path, type, nest=0, intertPoint=null){
                 if(event2.key === "Enter"){
                     window.requires.fs.writeFileSync(path+"/"+event2.target.value, "");
                     // console.log(path)
-                    const parent = document.querySelector(`.dir[data-fullpath="${path.replaceAll("\\", "/").toLowerCase()}"]`)
+                    const parent = document.querySelector(`.dir[data-fullpath="${path.replaceAll("\\", "/")}"]`)
                     event2.target.remove();
                     const i2 = await onclick_element(parent);
                     const i3 =  await onclick_element(parent);
@@ -239,7 +239,7 @@ async function create_element(path, type, nest=0, intertPoint=null){
     // element.style.width = "300px"; 
     // element.style.height = "40px";
     element.dataset.status = "closed";
-    element.dataset.fullpath = window.requires.path.resolve(path).replaceAll("\\", "/").toLowerCase();
+    element.dataset.fullpath = window.requires.path.resolve(path).replaceAll("\\", "/");
     element.style.display = "block";
     element.onclick = async (event)=>{
         onclick_element(event.target);
@@ -266,7 +266,7 @@ async function onclick_element(target){
             target.style.color = "blue";
             before_selected_selement = target;
             if(type == "file"){
-                if(document.querySelector(`.tab[data-fullpath="${path.toLowerCase()}"]`) === null){
+                if(document.querySelector(`.tab[data-fullpath="${path}"]`) === null){
                     
                     let em = create_tab().dataset.fullpath;
                     const fullpath = get_path(path);

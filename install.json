@@ -23,6 +23,10 @@
         {
             "name":"cmd",
             "description":"create command (open prompt)"
+        },
+        {
+            "name":"bin_open",
+            "description":"open binary"
         }
         ]
 }
