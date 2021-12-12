@@ -193,7 +193,7 @@ async function create_element(path, type, nest=0, intertPoint=null){
                 // console.log(event2);
                 if(event2.key === "Enter"){
                     window.requires.fs.writeFileSync(path+"/"+event2.target.value, "");
-                    console.log(path)
+                    // console.log(path)
                     const parent = document.querySelector(`.dir[data-fullpath="${path.replaceAll("\\", "/").toLowerCase()}"]`)
                     event2.target.remove();
                     const i2 = await onclick_element(parent);
@@ -284,8 +284,32 @@ async function onclick_element(target){
                 target.style.background  = "gray";
                 target.dataset.status = "opend";
                 let children = fs.readdirSync(path);
-                children =children.map((child)=>path+"/"+child);
-                const DirFlags = await window.api.isDirs(children);
+                children = children.map((child)=>path+"/"+child);
+                let DirFlags = await window.api.isDirs(children);
+                const dir_flags_dict = {};
+                for(let i=0,len=children.length;i<len;i++){
+                    dir_flags_dict[children[i]] = DirFlags[i];
+                }
+                // console.log(children)
+                // const index = 0;
+                children.sort((a,b)=>{
+                if(dir_flags_dict[a] === dir_flags_dict[b]){
+                    a = a.toString().toLowerCase();
+                	b = b.toString().toLowerCase();
+                	if(a < b) return 1;
+                	else if(a > b) return -1;
+                
+                }else{
+                    if(dir_flags_dict[a]){
+                        return 1;
+                        
+                        }else return -1;
+                    }
+                // index+=1
+                })
+                DirFlags = DirFlags.map((em,i)=>dir_flags_dict[children[i]])
+                // console.log(children)
+
                 for(let i=0,len=children.length;i<len;i++){
                    create_element(children[i], DirFlags[i] ? "dir":"file", nest+1, target);
                 }
