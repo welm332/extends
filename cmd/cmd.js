@@ -77,7 +77,7 @@ async function openCmd(){
                 input.style.color = "white";
                 input.style.outline =  "none";
                 input.onkeydown = async (event)=>{
-                    console.log(event.key);
+                    console.log(event);
                     if(event.key === "Tab" && event.target.dataset.children){
                         let dirs = event.target.dataset.children.split("|");
                         const target = event.target;
@@ -138,6 +138,12 @@ async function openCmd(){
                             event.target.setSelectionRange(event.target.value.length-1, event.target.value.length-1)
                         }
                         return
+                    }
+                    else if(event.key === "c" && event.ctrlKey){
+                        target = event.target;
+                        target.remove();
+                        await window.api.child_process_session_kill(`SIGINT`,"Cmd");
+
                     }
                     else if(event.key !== "Enter"){
                         commands_history[commands_history.length-1] += event.key;

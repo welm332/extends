@@ -1,10 +1,27 @@
 .dir,.file{
     background-color:  white;
     color:black;
+}
+.dir[data-status="closed"]{
+    background: white;
+    
+}
+
+.dir[data-status="opend"]{
+    background: gray;
     
 }
 #dir_side{
     z-index: 1;
+    width: 200px;
+    resize: horizontal;
+    
+}
+#dir_side *[data-selected="true"]{
+    color : blue;
+}
+#dir_side *[data-selected="false"]{
+    color : black;
 }
 
 .editor{

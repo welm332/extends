@@ -1,5 +1,6 @@
 {
     "load":[
         {"type":"script", "attr":{"src":"%dirname%/auto_escape.js"}}
-    ]
+    ],
+    "validity":true
 }

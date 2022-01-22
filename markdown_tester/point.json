@@ -6,5 +6,6 @@
     "download":[
         "print.js",
         "print.html"
-        ]
+        ],
+    "validity":true
 }

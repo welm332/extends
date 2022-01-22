@@ -64,7 +64,8 @@ if(palette_commands !== null){
         }
     `;}
 
-
+    
+let dir_side_width = "200px";
 // const beforefunc = open_args;
 window.api.create_local_shk("Ctrl+B");
 window.api.on("Ctrl+B", create_side);
@@ -261,9 +262,9 @@ async function onclick_element(target){
         const div = document.querySelector("#dir_side");
         // if(true){
             if(before_selected_selement !== null){
-                before_selected_selement.style.color = "black";
+                before_selected_selement.dataset.selected = "false";
             }
-            target.style.color = "blue";
+            target.dataset.selected = "true";
             before_selected_selement = target;
             if(type == "file"){
                 if(document.querySelector(`.tab[data-fullpath="${path}"]`) === null){
@@ -281,7 +282,7 @@ async function onclick_element(target){
         // }
         if(target.className === "dir"){
             if(target.dataset.status === "closed"){
-                target.style.background  = "gray";
+                // target.style.background  = "gray";
                 target.dataset.status = "opend";
                 let children = fs.readdirSync(path);
                 children = children.map((child)=>path+"/"+child);
@@ -314,7 +315,7 @@ async function onclick_element(target){
                    create_element(children[i], DirFlags[i] ? "dir":"file", nest+1, target);
                 }
             }else{
-                target.style.background  = "white";
+                // target.style.background  = "white";
                 // const delist = Array(...div.children).filter((em)=> window.requires.path.dirname(em.dataset.fullpath) ===  target.dataset.fullpath)
                 const delist = Array(...div.children).filter((em)=> em.dataset.fullpath.indexOf(target.dataset.fullpath) !== -1 && target !== em)
                 for(const em of delist){
@@ -348,8 +349,8 @@ window.addEventListener("load", async ()=>{
 );
 
 function create_side(){
-    if(document.querySelector("#input_area").style.padding !== "34px 0px 20px 200px"){
-        document.querySelector("#input_area").style.padding = "34px 0px 20px 200px";
+    if(document.querySelector("#input_area").style.padding !== `34px 0px 20px ${dir_side_width}`){
+        document.querySelector("#input_area").style.padding = `34px 0px 20px ${dir_side_width}`;
     }else{
         document.querySelector("#input_area").style.padding = "34px 0px 20px 0px";
     }
@@ -367,5 +368,16 @@ function create_side(){
     document.body.insertBefore( div,a);
     div.style.height = "75vh";
     div.style.overflow = "auto auto";
+    // dir_sideのサイズ変更検知
+    const observer = new MutationObserver(() => {
+        const resizeable = div
+        //要素のサイズ確認
+        dir_side_width = String(resizeable.getBoundingClientRect().width)+"px";
+        document.querySelector("#input_area").style.padding = `34px 0px 20px ${dir_side_width}`
+      })
+      observer.observe(div, {
+        attriblutes: true,
+        attributeFilter: ["style"]
+      })
     return div;
     }

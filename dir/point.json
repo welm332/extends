@@ -9,5 +9,6 @@
         "file_icon.png",
         "dir.js",
         "dir.css"
-    ]
+    ],
+    "validity":true
 }

@@ -2,6 +2,7 @@
     "win32":[
         "powershell.exe",
         "cmd.exe",
+        "python",
         "wsl.exe"],
     "linux":[
         "bash"]

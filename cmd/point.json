@@ -8,5 +8,6 @@
         "cmd.html",
         "cmd.css",
         "shells.json"
-    ]
+    ],
+    "validity":true
 }
