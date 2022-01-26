@@ -1,9 +1,3 @@
-// window.addEventListener('DOMContentLoaded', ()=>{
-//     palette_commands["open cmd"] = "openCmd()";//`tab=create_tab();loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/webviewer/web.html");tab.querySelector("#tab_name").textContent = "Browser"`;
-// });
-// if(palette_commands !== null){
-//     palette_commands["open cmd"] = "openCmd()";//`tab=create_tab();loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/webviewer/web.html");tab.querySelector("#tab_name").textContent = "Browser"`;
-// }
 const before_readFile = readFile;
 readFile = (path, replacement = tab_opend_path) =>{
         mimes = {
@@ -29,7 +23,7 @@ readFile = (path, replacement = tab_opend_path) =>{
         tab_widths[path] = tab_widths[replacement];
         editor_dict[path] = editor_dict[replacement];
         
-        loadhtml(editor, `/../extends/bin_open/bin.html`);
+        loadhtml(editor, extends_path+`/bin_open/bin.html`);
         bin_em = document.querySelector(`.editor[data-fullpath="${path}"]`).querySelector("object");
         console.log(bin_em);
         console.log(path)
@@ -45,23 +39,3 @@ readFile = (path, replacement = tab_opend_path) =>{
         before_readFile(path, replacement) 
     }
 }
-// function bin_read(){
-//         mimes = {
-//         "htm" :"text/html",
-//         "html"	:"text/html",
-//         "xml"	:"text/xml",
-//         "gif"	:"image/gif",
-//         "jpg" :"image/jpeg",
-//         "jpeg"	:"image/jpeg",
-//         "png"	:"image/png",
-//         "doc"	:"application/msword",
-//         "pdf"	:"application/pdf",
-//     }
-    
-//     const tab=create_tab();
-//     loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"),`/../extends/bin_open/bin.html`);
-//     bin_em = document.getElementById("bin");
-//     bin_em.type = mimes["png"]
-//     bin_em.data = "C:/Users/taiki/Desktop/program/portfolio/150819_electron_text_editor/python/func221.png";
-    
-// }

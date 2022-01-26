@@ -1,32 +1,29 @@
 function get_terms(){
     const terms = [];
     const platform = window.requires.platform;
-      const shells = JSON.parse(fs.readFileSync(window.requires.dirname+'/../extends/cmd/shells.json', 'utf8'));
+      const shells = JSON.parse(fs.readFileSync(extends_path+'/cmd/shells.json', 'utf8'));
       console.log(shells)
       return shells[platform];
 }
 
 window.addEventListener('DOMContentLoaded', ()=>{
-    palette_commands["open cmd"] = "openCmd()";//`tab=create_tab();loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/webviewer/web.html");tab.querySelector("#tab_name").textContent = "Browser"`;
+    palette_commands["open cmd"] = "openCmd()";
 });
 if(palette_commands !== null){
-    palette_commands["open cmd"] = "openCmd()";//`tab=create_tab();loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/webviewer/web.html");tab.querySelector("#tab_name").textContent = "Browser"`;
+    palette_commands["open cmd"] = "openCmd()";
 }
 
 async function openCmd(){
     tab=create_tab();
     const commands_dict = {};
-    if((await window.requires.extensions.extensions("list","-lo")).indexOf("dir") !== -1){
-        commands_dict["opendir .*?"] = (value)=>{
-            const dir_path = value.substring(8);
-            open_dir([dir_path])
-        }
-    }
+    // if((await window.requires.extensions.extensions("list","-lo")).indexOf("dir") !== -1){
+    //     commands_dict["opendir .*?"] = (value)=>{
+    //         const dir_path = value.substring(8);
+    //         open_dir([dir_path])
+    //     }
+    // }
     const inputer_reg = RegExp("[A-Z]:(\\\\|/)\\S*>$");
     console.log(inputer_reg);
-    // console.log(inputer_reg.test(data));
-    // loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/webviewer/web.html")
-    // console.log(get_terms[0])
     const terms = get_terms();
     let prompt_select = await window.api.show_message_box("question","選択","ターミナルの選択","どのターミナルを開きますか?", terms);
     if (prompt_select === -1){
@@ -34,7 +31,7 @@ async function openCmd(){
     }
     
     window.api.create_process_shell(terms[prompt_select], "Cmd");
-    loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), "/../extends/cmd/cmd.html")
+    loadhtml(document.querySelector(".editor[data-fullpath='"+tab.dataset.fullpath+"']"), extends_path+"/cmd/cmd.html")
     const commands_history = [""];
     let now_num = 0;
     tab.querySelector("#tab_name").textContent = terms[prompt_select];
